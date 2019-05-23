@@ -1,0 +1,15 @@
+{
+    "google": {
+        "maps": {
+            "api" : {
+                "key": "AIzaSyDmCVC4EU9sLCVVrG5F2qkoiGraBPKxcLY",
+                "geocoding": {
+                    "url": "https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={api_key}"
+                },
+                "reverse_geocoding": {
+                    "url": "https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={api_key}"
+                }
+            }
+        }
+    }
+}
