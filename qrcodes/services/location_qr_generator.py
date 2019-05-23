@@ -45,7 +45,7 @@ def get_geolocation(address):
     return None
 
 def get_address(latitude, longitude):
-    with open(os.path.join(app.root_path, 'config', 'config.json')) as config_file:
+    with open(os.path.join(os.getcwd(), 'qrcodes', 'config', 'config.json')) as config_file:
         config = json.load(config_file)
 
         google_api_config = config.get('google').get('maps').get('api')

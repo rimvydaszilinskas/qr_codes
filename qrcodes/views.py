@@ -123,15 +123,18 @@ def location(request):
             return FileResponse(image_io, as_attachment=True, filename=f'{filename}_qr.png')
         else:
             if post_data.get('address') != '':
+                address = post_data.get('address')
                 filename = post_data.get('address')
                 coordinates = get_geolocation(post_data.get('address'))
             else:
-                filename = 'location'
                 coordinates = {
                     'latitude': post_data.get('latitude'),
                     'longitude': post_data.get('longitude')
                 }
+
+                address = get_address(coordinates['latitude'], coordinates['longitude'])
             
+            coordinates['address'] = address
             coordinates_str = json.dumps(coordinates)
 
             response = HttpResponse(coordinates_str, content_type='application/json')
