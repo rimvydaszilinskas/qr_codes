@@ -90,9 +90,15 @@ def contact_upload(request):
     if request.method == 'GET':
         return render(request, 'qrcodes/vcard_upload.html')
     elif request.method == 'POST':
-        data = load_data_from_vcard(request.FILES['file'].read())
-        print(request.FILES['file'].read())
-        return HttpResponse(request.FILES['file'])
+        contact_str = request.FILES['file'].read().decode('UTF-8')
+
+        contact_data = load_data_from_vcard(contact_str)
+
+        context = {
+            'contact': contact_data
+        }
+
+        return render(request, 'qrcodes/contact.html', context=context)
     else:
         return HttpResponseNotAllowed(request)
 
