@@ -3,7 +3,7 @@
 {% block title %} Link - QR {% endblock %}
 
 {% block content %}
-<form action="/link/qr" method="POST">
+<form action="{% url 'qrcodes:link' %}" method="POST">
     {% csrf_token %}
     <div class="form-group">
         <label for="link">Link</label>

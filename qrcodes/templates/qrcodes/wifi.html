@@ -1,31 +1,31 @@
-{% extends "base.html" %}
+{% extends "qrcodes/layout/base.html" %}
 
 {% block title %} Wifi - QR {% endblock %}
 
 {% block content %}
-<form action="/wifi/qr" method="POST">
+<form action="{% url 'qrcodes:wifi' %}" method="POST">
     {% csrf_token %}
     <div class="form-group">
         <label for="ssid">SSID</label>
-        <input class="form-control" type="text" id="ssid" name="ssid" placeholder="SSID" {% if wifi %} value="{{wifi.get('ssid')}}" {% endif%}>
+        <input class="form-control" type="text" id="ssid" name="ssid" placeholder="SSID" {% if wifi %} value="{{wifi.ssid }}" {% endif%}>
     </div>
     <div class="form-group">
         <label for="password">Password</label>
-        <input class="form-control" type="text" id="password" name="password" placeholder="password" {% if wifi %} value="{{wifi.get('password')}}" {% endif %}>
+        <input class="form-control" type="text" id="password" name="password" placeholder="password" {% if wifi %} value="{{wifi.password }}" {% endif %}>
     </div>
     <div class="form-group">
         <label for="security">Security</label>
         <select class="custom-select" id="security" name="security">
-            <option value="nopass" {% if wifi %} {% if wifi.get('security') == 'nopass' %} selected {% endif %} {% endif %}>None</option>
-            <option value="WEP" {% if wifi %} {% if wifi.get('security') == 'WEP' %} selected {% endif %} {% endif %}>WEP</option>
-            <option value="WPA" {% if wifi %} {% if wifi.get('security') == 'WPA' %} selected {% endif %} {% endif %}>WPA</option>
+            <option value="nopass" {% if wifi %} {% if wifi.security == 'nopass' %} selected {% endif %} {% endif %}>None</option>
+            <option value="WEP" {% if wifi %} {% if wifi.security == 'WEP' %} selected {% endif %} {% endif %}>WEP</option>
+            <option value="WPA" {% if wifi %} {% if wifi.security == 'WPA' %} selected {% endif %} {% endif %}>WPA</option>
         </select>
     </div>
     <div class="form-group">
         <label for="hidden">Hidden</label>
         <select class="custom-select" id="hidden" name="hidden">
-            <option value="visible" {% if wifi %} {% if not wifi.get('hidden') == false %} selected {% endif %} {% endif%}>No</option>
-            <option value="hidden" {% if wifi %} {% if wifi.get('hidden') == true %} selected {% endif %} {% endif%} >Yes</option>
+            <option value="visible" {% if wifi %} {% if not wifi.hidden %} selected {% endif %} {% endif%}>No</option>
+            <option value="hidden" {% if wifi %} {% if wifi.hidden %} selected {% endif %} {% endif%} >Yes</option>
         </select>
     </div>
     <div class="form-check">
@@ -41,6 +41,6 @@
         </label>
     </div>
     <button type="submit" class="btn btn-success">Generate</button>
-    <a class="btn btn-success" href="/wifi/upload">Upload JSON</a>
+    <a class="btn btn-success" href="{% url 'qrcodes:wifi_upload' %}">Upload JSON</a>
 </form>
 {% endblock %}

@@ -1,4 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+
+def index(request):
+    return redirect('qrcodes:link')
 
 def link(request):
     context = {}
@@ -6,7 +9,9 @@ def link(request):
     return render(request, 'qrcodes/link.html', context)
 
 def contact(request):
-    context = {}
+    context = {
+        'phone_numbers': [1, 2, 3]
+    }
 
     return render(request, 'qrcodes/contact.html', context)
 

@@ -5,6 +5,7 @@ from . import views
 app_name = 'qrcodes'
 
 urlpatterns = [
+    path('', views.index, name='index'),
     path('link/', views.link, name='link'),
     path('contact/', views.contact, name='contact'),
     path('contact/upload', views.contact_upload, name='contact_upload'),
