@@ -5,11 +5,13 @@ import json
 import os
 
 def create_geo_coordinate_qr(latitude, longitude):
+    # returns pillow image
     location = f'geo:{latitude},{longitude}'
 
     return qrcode.make(location)
 
 def create_address_qr(address):
+    # returns pillow image
     coordinates = get_geolocation(address)
 
     if coordinates is not None:
@@ -17,6 +19,7 @@ def create_address_qr(address):
     return None
 
 def get_geolocation(address):
+    # returns dictionary of coordinates
     with open(os.path.join(os.getcwd(), 'qrcodes', 'config', 'config.json')) as config_file:
         coordinate = {}
 
@@ -45,6 +48,7 @@ def get_geolocation(address):
     return None
 
 def get_address(latitude, longitude):
+    # retuns address string
     with open(os.path.join(os.getcwd(), 'qrcodes', 'config', 'config.json')) as config_file:
         config = json.load(config_file)
 

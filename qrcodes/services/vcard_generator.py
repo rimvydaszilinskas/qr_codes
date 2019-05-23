@@ -100,5 +100,4 @@ def load_data_from_vcard(vcard):
             data["job_title"] = line.split(":")[1]
         if line.startswith("EMAIL:"):
             data["email"] = line.split(":")[1]
-    print(data)
     return data

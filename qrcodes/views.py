@@ -6,10 +6,11 @@ import re
 import json
 
 from .services.qr_code_generator import generate_link_qrcode, generate_wifi_qrcode
-from .services.vcard_generator import generate_vcard_qrcode, generate_vcard_string
+from .services.vcard_generator import generate_vcard_qrcode, generate_vcard_string, load_data_from_vcard
 from .services.location_qr_generator import create_geo_coordinate_qr, create_address_qr, get_geolocation, get_address
 
 def index(request):
+    # default path redirects to link
     return redirect('qrcodes:link')
 
 def link(request):
@@ -33,6 +34,7 @@ def link(request):
 
 def contact(request):
     if request.method == 'GET':
+        # array for displaying variable ammount of phone number fields
         context = {
             'phone_numbers': [1, 2, 3]
         }
@@ -74,7 +76,6 @@ def contact(request):
             vcard = generate_vcard_string(firstname=firstname, lastname=lastname, organisation=organisation,
                                         job_title=job_title, phone=phones, email=email)
 
-            # return FileResponse(vcard, as_attachment=True, filename='vcard.vcf')
             response = HttpResponse(vcard, content_type='text/plain')
             response['Content-Disposition'] = f'attachment; filename={firstname}_{lastname}.vcf'
 
@@ -85,16 +86,12 @@ def contact(request):
 
 
 def contact_upload(request):
+    # TODO: figure this out
     if request.method == 'GET':
-        context = {
-            'phone_numbers': [1, 2, 3]
-        }
-
-        return render(request, 'qrcodes/vcard_upload.html', context)
+        return render(request, 'qrcodes/vcard_upload.html')
     elif request.method == 'POST':
-        # string = json.load(request.FILES['file'])
-
-        # return HttpResponse(json.dumps(string))
+        data = load_data_from_vcard(request.FILES['file'].read())
+        print(request.FILES['file'].read())
         return HttpResponse(request.FILES['file'])
     else:
         return HttpResponseNotAllowed(request)
@@ -148,9 +145,17 @@ def location_upload(request):
     if request.method == 'GET':
         return render(request, 'qrcodes/location_upload.html')
     elif request.method == 'POST':
-        post_data = request.POST
+        location_file = request.FILES['file']
 
+        location_str = location_file.read().decode('UTF-8')
 
+        location_data = json.loads(location_str)
+
+        context = {
+            'location': location_data
+        }
+
+        return render(request, 'qrcodes/location.html', context=context)
     else:
         return HttpResponseNotAllowed(request)
 
@@ -198,10 +203,18 @@ def wifi(request):
 
 def wifi_upload(request):
     if request.method == 'GET':
-        context = {}
-
-        return render(request, 'qrcodes/wifi_upload.html', context)
+        return render(request, 'qrcodes/wifi_upload.html')
     elif request.method == 'POST':
-        pass
+        wifi_file = request.FILES['file']
+
+        wifi_str = wifi_file.read().decode('UTF-8')
+
+        wifi_data = json.loads(wifi_str)
+
+        context = {
+            'wifi': wifi_data
+        }
+
+        return render(request, 'qrcodes/wifi.html', context=context)
     else:
         return HttpResponseNotAllowed(request)
