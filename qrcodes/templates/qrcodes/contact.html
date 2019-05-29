@@ -61,7 +61,7 @@
             </div>
         </div>
         {% endfor %}
-        {% if contact.phone or length < 3 %}
+        {% if contact.phone|length < 3 %}
             {% for number in phone_numbers %}
             <div class="form-row">
                 <div class="form-group col-md-8">

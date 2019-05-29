@@ -19,56 +19,59 @@ def create_address_qr(address):
     return None
 
 def get_geolocation(address):
-    # returns dictionary of coordinates
-    with open(os.path.join(os.getcwd(), 'qrcodes', 'config', 'config.json')) as config_file:
+
+    response = make_request(address=address)
+    
+    # check if response exist
+    if response is not None:
+        if len(response.get('results')) == 0:
+            return None
+
         coordinate = {}
 
-        config = json.load(config_file)
-
-        google_api_config = config.get('google').get('maps').get('api')
-        geocoding_config = google_api_config.get('geocoding')
-
-        api_key = google_api_config.get('key')
-        geocoding_url = geocoding_config.get('url')
-
-        url = geocoding_url.format(**locals())
-
-        response = requests.get(url)
-
-        address = json.loads(response.text)
-
-        if len(address.get('results')) == 0:
-            return None
-        
-        coordinate['latitude'] = address['results'][0]['geometry']['location']['lat']
-        coordinate['longitude'] = address['results'][0]['geometry']['location']['lng']
+        coordinate['address'] = address
+        coordinate['latitude'] = response['results'][0]['geometry']['location']['lat']
+        coordinate['longitude'] = response['results'][0]['geometry']['location']['lng']
 
         return coordinate
-
+    
     return None
+
 
 def get_address(latitude, longitude):
     # retuns address string
-    with open(os.path.join(os.getcwd(), 'qrcodes', 'config', 'config.json')) as config_file:
-        config = json.load(config_file)
+    response = make_request(geocoding_type='reverse_geocoding', latitude=latitude, longitude=longitude)
 
-        google_api_config = config.get('google').get('maps').get('api')
-        geocoding_config = google_api_config.get('reverse_geocoding')
+    if response is not None:
 
-        api_key = google_api_config.get('key')
-        geocoding_url = geocoding_config.get('url')
-
-        url = geocoding_url.format(**locals())
-
-        response = requests.get(url)
-
-        location = json.loads(response.text)
-
-        if len(location.get('results')) == 0:
+        if len(response.get('results')) == 0:
             return None
         
-        address = location['results'][0]['formatted_address']
+        address = response['results'][0]['formatted_address']
 
         return address
 
     return None
+
+def make_request(geocoding_type='geocoding', address='', latitude='', longitude=''):
+    if geocoding_type in ['geocoding', 'reversse_geocoding']:
+        # returns dictionary of coordinates
+        with open(os.path.join(os.getcwd(), 'qrcodes', 'config', 'config.json')) as config_file:
+            coordinate = {}
+
+            config = json.load(config_file)
+
+            google_api_config = config.get('google').get('maps').get('api')
+            geocoding_config = google_api_config.get(geocoding_type)
+
+            api_key = google_api_config.get('key')
+            geocoding_url = geocoding_config.get('url')
+
+            url = geocoding_url.format(**locals())
+
+            response = requests.get(url)
+
+            json_response = json.loads(response.text)
+
+            return json_response
+    return None    
