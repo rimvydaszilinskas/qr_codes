@@ -1,0 +1,14 @@
+{% extends "qr/layout/base.html" %}
+
+{% block title %} Link - QR {% endblock %}
+
+{% block content %}
+<form action="{% url 'qr:link' %}" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="link">Link</label>
+        <input class="form-control" type="text" id="link" name="link" placeholder="www.google.com">
+    </div>
+    <button type="submit" class="btn btn-success">Generate QR</button>
+</form>
+{% endblock %}
