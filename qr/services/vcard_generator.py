@@ -68,7 +68,7 @@ class VCardGenerator:
                 self.set_title(title)
             elif line.startswith('TEL;'):
                 match = re.search(r'TYPE=(.+?);VALUE=uri:tel:(.+)', line)
-                print('line', line)
+                
                 self.add_phone(phone=match.group(2), phone_type=match.group(1))
             elif line.startswith('EMAIL:'):
                 email = line.split(':')[1]
